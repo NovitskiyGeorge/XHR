@@ -2,6 +2,8 @@ document.querySelector('.btn-add').addEventListener('click', _add);
 let id = 0;
 
 
+
+
 const LOADING_CLASS = 'items-wrapper--loading';
 const WRAPPER_ITEMS_CLASS = 'items-wrapper';
 
@@ -13,7 +15,6 @@ function add(toAdd, id, callBack) {
   addNewElementToWrapper(toAdd, id);
   xhr.send(JSON.stringify({
     title: toAdd,
-    test: 322,
     id: id
   }));
   xhr.onload = function () {
@@ -67,6 +68,17 @@ function onSuccessAdd(items) {
 function _add() {
   // debugger
   let title = document.querySelector('#input-title').value;  
+  let itemList = document.querySelectorAll('.item');
+
+  if(itemList.length >= 1) {
+    itemList.forEach(function(item) {
+      id = item.id;
+    });
+    console.log(id);
+  } else {
+    id = 0;
+  } 
+  
   id++;
   add(title, id, onSuccessAdd);
 }
@@ -89,16 +101,11 @@ function main() {
 function subscribeOnRemoveButtons() {
   document.querySelector('.items-wrapper').addEventListener('click', function(event) {
     // debugger
-    if (event.target.classList.contains('item__remove')) {
+    if (event.target.classList.contains('item__remove')) {   
+      
       const itemElement = event.target.parentNode;
       const text = itemElement.querySelector('.item__title').innerText;
-
-
       id = itemElement.id;
-
-
-
-
 
       console.log(id);
 

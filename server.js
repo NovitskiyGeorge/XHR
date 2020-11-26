@@ -32,7 +32,7 @@ app.use("/item", jsonParser, function (req, res) {
       break;
     case "PUT":
       taskId++;
-      items.push({ title: req.body.title, id: taskId });
+      items.push({ title: req.body.title, id: req.body.id });
       console.log("items: ", items);
       res.json(items[items.length - 1]);
       return;
