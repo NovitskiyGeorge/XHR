@@ -1,9 +1,5 @@
 document.querySelector('.btn-add').addEventListener('click', _add);
 let id = 0;
-
-
-
-
 const LOADING_CLASS = 'items-wrapper--loading';
 const WRAPPER_ITEMS_CLASS = 'items-wrapper';
 
@@ -83,32 +79,25 @@ function _add() {
   add(title, id, onSuccessAdd);
 }
 
-
 function addItemsFromServer(itemList) { /// itemList = ['esdfdeswf', 'wefewfewf']
   itemList.forEach(function(element){
-
     addNewElementToWrapper(element.title, element.id);
   });
 }
-
 
 function main() {
   subscribeOnRemoveButtons();
   get(addItemsFromServer);
 }
 
-
 function subscribeOnRemoveButtons() {
   document.querySelector('.items-wrapper').addEventListener('click', function(event) {
     // debugger
-    if (event.target.classList.contains('item__remove')) {   
-      
+    if (event.target.classList.contains('item__remove')) {         
       const itemElement = event.target.parentNode;
       const text = itemElement.querySelector('.item__title').innerText;
       id = itemElement.id;
-
       console.log(id);
-
       remove(+id, onSuccessAdd);
       itemElement.remove();
     }
