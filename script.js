@@ -1,19 +1,21 @@
 document.querySelector('.btn-add').addEventListener('click', _add);
-let id;
+let id = 0;
 
 
 const LOADING_CLASS = 'items-wrapper--loading';
 const WRAPPER_ITEMS_CLASS = 'items-wrapper';
 
-function add(toAdd, callBack) {
+function add(toAdd, id, callBack) {
   let xhr = new XMLHttpRequest(); // new HttpRequest instance 
   xhr.open("PUT", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
   document.querySelector('.' + WRAPPER_ITEMS_CLASS).classList.add(LOADING_CLASS);
-  addNewElementToWrapper(toAdd);
+  addNewElementToWrapper(toAdd, id);
   xhr.send(JSON.stringify({
-    title: toAdd
-  }))
+    title: toAdd,
+    test: 322,
+    id: id
+  }));
   xhr.onload = function () {
     if (xhr.status != 200) {
       alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
@@ -30,7 +32,7 @@ function remove(toRemove, callBack) {
   xhr.open("DELETE", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(JSON.stringify({
-    id: toRemove
+    id: +toRemove
   }))
   xhr.onload = function () {
     if (xhr.status != 200) {
@@ -63,8 +65,10 @@ function onSuccessAdd(items) {
 }
 
 function _add() {
+  // debugger
   let title = document.querySelector('#input-title').value;  
-  add(title, onSuccessAdd);
+  id++;
+  add(title, id, onSuccessAdd);
 }
 
 
@@ -84,10 +88,12 @@ function main() {
 
 function subscribeOnRemoveButtons() {
   document.querySelector('.items-wrapper').addEventListener('click', function(event) {
-
+    // debugger
     if (event.target.classList.contains('item__remove')) {
       const itemElement = event.target.parentNode;
       const text = itemElement.querySelector('.item__title').innerText;
+
+
       id = itemElement.id;
 
 
