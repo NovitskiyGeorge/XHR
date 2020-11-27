@@ -38,19 +38,17 @@ function remove(toRemove) {
 }
 
 function get(callBack) {
-  // debugger
-  let xhr = new XMLHttpRequest(); // new HttpRequest instance 
-  xhr.open("GET", 'http://localhost:3000/item');
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send()
-  xhr.onload = function () {
-    if (xhr.status != 200) {
-      alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
-    } else {
-      let response = JSON.parse(xhr.response);
-      callBack(response)
+  fetch('http://localhost:3000/item', {    
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json"
     }
-  };
+  })  
+  .then((response) => response.json())
+  .then((result) => {
+        callBack(result);
+  })
+  .catch(error => console.error('Error', error));
 }
 
 function onSuccessAdd(items) {  
@@ -59,7 +57,6 @@ function onSuccessAdd(items) {
 }
 
 function _add() {
-  // debugger
   let title = document.querySelector('#input-title').value;
   add(title, onSuccessAdd);
 }
@@ -75,19 +72,15 @@ function main() {
   get(addItemsFromServer);
 }
 
-
 function subscribeOnRemoveButtons() {
   document.querySelector('.items-wrapper').addEventListener('click', function(event) {
-  
-
     if (event.target.classList.contains('item__remove')) {
       const itemElement = event.target.parentNode;
-      const text = itemElement.querySelector('.item__title').innerText;
       const id = itemElement.id;
       remove(+id, onSuccessAdd);
       itemElement.remove();
     }
-  })
+  });
 }
 
 function getItemByText(text) {
