@@ -1,9 +1,9 @@
 /**
  * API
  * 
- * PUT => {title: 'string', id: 1}
- * GET => [{title: 'string', id: 1}, ...]
- * DELETE => {id: 1}
+ * PUT =>    input {title: 'string'} output {title: 'string', id: 1}
+ * GET =>                            output [{title: 'string', id: 1}, ...]
+ * DELETE => input {id: 1}           output [{title: 'string', id: 1}, ...]
  */
 
 

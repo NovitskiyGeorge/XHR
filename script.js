@@ -1,38 +1,33 @@
 document.querySelector('.btn-add').addEventListener('click', _add);
-let id = 0;
-
 
 const LOADING_CLASS = 'items-wrapper--loading';
 const WRAPPER_ITEMS_CLASS = 'items-wrapper';
 
-function add(toAdd, id, callBack) {
+function add(toAdd, callBack) {
   let xhr = new XMLHttpRequest(); // new HttpRequest instance 
   xhr.open("PUT", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
   document.querySelector('.' + WRAPPER_ITEMS_CLASS).classList.add(LOADING_CLASS);
-  addNewElementToWrapper(toAdd, id);
   xhr.send(JSON.stringify({
-    title: toAdd,
-    test: 322,
-    id: id
-  }));
+    title: toAdd
+  }))
   xhr.onload = function () {
     if (xhr.status != 200) {
       alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
     } else {
       let response = JSON.parse(xhr.response);
       callBack(response)
+
     }
   };
 }
 
 function remove(toRemove, callBack) {
-  // debugger
   let xhr = new XMLHttpRequest(); // new HttpRequest instance 
   xhr.open("DELETE", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(JSON.stringify({
-    id: +toRemove
+    id: toRemove
   }))
   xhr.onload = function () {
     if (xhr.status != 200) {
@@ -45,6 +40,7 @@ function remove(toRemove, callBack) {
 }
 
 function get(callBack) {
+  debugger
   let xhr = new XMLHttpRequest(); // new HttpRequest instance 
   xhr.open("GET", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
@@ -60,25 +56,22 @@ function get(callBack) {
 }
 
 function onSuccessAdd(items) {
+  
   document.querySelector('.' + WRAPPER_ITEMS_CLASS).classList.remove(LOADING_CLASS);
 
 }
 
 function _add() {
   // debugger
-  let title = document.querySelector('#input-title').value;  
-  id++;
-  add(title, id, onSuccessAdd);
+  let title = document.querySelector('#input-title').value;
+  add(title, onSuccessAdd);
 }
 
-
 function addItemsFromServer(itemList) { /// itemList = ['esdfdeswf', 'wefewfewf']
-  itemList.forEach(function(element){
-
+  itemList.forEach(function(element){    
     addNewElementToWrapper(element.title, element.id);
   });
 }
-
 
 function main() {
   subscribeOnRemoveButtons();
@@ -88,30 +81,21 @@ function main() {
 
 function subscribeOnRemoveButtons() {
   document.querySelector('.items-wrapper').addEventListener('click', function(event) {
-    // debugger
     if (event.target.classList.contains('item__remove')) {
       const itemElement = event.target.parentNode;
       const text = itemElement.querySelector('.item__title').innerText;
-
-
-      id = itemElement.id;
-
-
-
-
-
+      const id = itemElement.id;
       console.log(id);
-
       remove(+id, onSuccessAdd);
       itemElement.remove();
     }
   })
 }
 
-function getItemByText(text, id) {
+function getItemByText(text) {
   const itemElement = document.createElement('div');
   itemElement.classList.add('item');
-  itemElement.id = id;
+
   const htmlString = `<div class="item__title">
                           ${text}
                         </div>
@@ -124,7 +108,8 @@ function getItemByText(text, id) {
 }
 
 function addNewElementToWrapper(text, id) {
-  let newItem = getItemByText(text, id);
+  let newItem = getItemByText(text);
+  newItem.id = id;
   document.querySelector('.items-wrapper').appendChild(newItem);
 }
 
