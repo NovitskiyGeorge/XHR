@@ -40,7 +40,7 @@ function remove(toRemove, callBack) {
 }
 
 function get(callBack) {
-  debugger
+  // debugger
   let xhr = new XMLHttpRequest(); // new HttpRequest instance 
   xhr.open("GET", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
