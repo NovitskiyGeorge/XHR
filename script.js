@@ -1,4 +1,5 @@
 document.querySelector('.btn-add').addEventListener('click', _add);
+let itemList = [];
 
 const LOADING_CLASS = 'items-wrapper--loading';
 const WRAPPER_ITEMS_CLASS = 'items-wrapper';
@@ -17,12 +18,15 @@ function add(toAdd, callBack) {
     } else {
       let response = JSON.parse(xhr.response);
       callBack(response)
-
+      itemList = [];
+      itemList.push(response);
+      addItemsFromServer(itemList);
     }
   };
 }
 
 function remove(toRemove, callBack) {
+
   let xhr = new XMLHttpRequest(); // new HttpRequest instance 
   xhr.open("DELETE", 'http://localhost:3000/item');
   xhr.setRequestHeader("Content-Type", "application/json");
@@ -81,6 +85,8 @@ function main() {
 
 function subscribeOnRemoveButtons() {
   document.querySelector('.items-wrapper').addEventListener('click', function(event) {
+  
+
     if (event.target.classList.contains('item__remove')) {
       const itemElement = event.target.parentNode;
       const text = itemElement.querySelector('.item__title').innerText;
