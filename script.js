@@ -1,3 +1,5 @@
+// const { response } = require("express");
+
 document.querySelector('.btn-add').addEventListener('click', _add);
 let itemList = [];
 
@@ -26,21 +28,19 @@ function add(toAdd, callBack) {
 }
 
 function remove(toRemove, callBack) {
-
-  let xhr = new XMLHttpRequest(); // new HttpRequest instance 
-  xhr.open("DELETE", 'http://localhost:3000/item');
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(JSON.stringify({
-    id: toRemove
-  }))
-  xhr.onload = function () {
-    if (xhr.status != 200) {
-      alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
-    } else {
-      let response = JSON.parse(xhr.response);
-      callBack(response)
+  fetch('http://localhost:3000/item', {
+    
+    method: 'DELETE',
+    body: JSON.stringify({
+      id: toRemove
+    }),
+    headers: {
+      "Content-Type": "application/json"
     }
-  };
+  })
+  .then((response) => response.json())
+  .catch(error => console.error('Error', error));
+
 }
 
 function get(callBack) {
@@ -91,7 +91,6 @@ function subscribeOnRemoveButtons() {
       const itemElement = event.target.parentNode;
       const text = itemElement.querySelector('.item__title').innerText;
       const id = itemElement.id;
-      console.log(id);
       remove(+id, onSuccessAdd);
       itemElement.remove();
     }
