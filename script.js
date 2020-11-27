@@ -1,35 +1,30 @@
-// const { response } = require("express");
-
 document.querySelector('.btn-add').addEventListener('click', _add);
 let itemList = [];
 
 const LOADING_CLASS = 'items-wrapper--loading';
 const WRAPPER_ITEMS_CLASS = 'items-wrapper';
 
-function add(toAdd, callBack) {
-  let xhr = new XMLHttpRequest(); // new HttpRequest instance 
-  xhr.open("PUT", 'http://localhost:3000/item');
-  xhr.setRequestHeader("Content-Type", "application/json");
-  document.querySelector('.' + WRAPPER_ITEMS_CLASS).classList.add(LOADING_CLASS);
-  xhr.send(JSON.stringify({
-    title: toAdd
-  }))
-  xhr.onload = function () {
-    if (xhr.status != 200) {
-      alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
-    } else {
-      let response = JSON.parse(xhr.response);
-      callBack(response)
-      itemList = [];
-      itemList.push(response);
-      addItemsFromServer(itemList);
+function add(toAdd) {
+  fetch('http://localhost:3000/item', {    
+    method: 'PUT',
+    body: JSON.stringify({
+      title: toAdd
+    }),
+    headers: {
+      "Content-Type": "application/json"
     }
-  };
+  })
+  .then((response) => response.json())
+  .then((result) => {
+      itemList = [];
+      itemList.push(result);
+      addItemsFromServer(itemList);
+  })
+  .catch(error => console.error('Error', error));
 }
 
-function remove(toRemove, callBack) {
-  fetch('http://localhost:3000/item', {
-    
+function remove(toRemove) {
+  fetch('http://localhost:3000/item', {    
     method: 'DELETE',
     body: JSON.stringify({
       id: toRemove
@@ -40,7 +35,6 @@ function remove(toRemove, callBack) {
   })
   .then((response) => response.json())
   .catch(error => console.error('Error', error));
-
 }
 
 function get(callBack) {
@@ -59,8 +53,7 @@ function get(callBack) {
   };
 }
 
-function onSuccessAdd(items) {
-  
+function onSuccessAdd(items) {  
   document.querySelector('.' + WRAPPER_ITEMS_CLASS).classList.remove(LOADING_CLASS);
 
 }
