@@ -1,9 +1,9 @@
 /**
  * API
  * 
- * PUT => {title: 'string', id: 1}
- * GET => [{title: 'string', id: 1}, ...]
- * DELETE => {id: 1}
+ * PUT =>    input {title: 'string'} output {title: 'string', id: 1}
+ * GET =>                            output [{title: 'string', id: 1}, ...]
+ * DELETE => input {id: 1}           output [{title: 'string', id: 1}, ...]
  */
 
 
@@ -32,7 +32,7 @@ app.use("/item", jsonParser, function (req, res) {
       break;
     case "PUT":
       taskId++;
-      items.push({ title: req.body.title, id: req.body.id });
+      items.push({ title: req.body.title, id: taskId });
       console.log("items: ", items);
       res.json(items[items.length - 1]);
       return;
